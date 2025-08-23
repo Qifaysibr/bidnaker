@@ -1,5 +1,6 @@
 // storage-adapter-import-placeholder
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 
 import sharp from 'sharp' // sharp-import
 import path from 'path'
@@ -93,4 +94,19 @@ export default buildConfig({
     },
     tasks: [],
   },
+  email: nodemailerAdapter({
+    defaultFromAddress: 'pks.bidang.ketenagakerjaan@gmail.com',
+    defaultFromName: 'PKS Bidnaker',
+    transportOptions: {
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT) || 587,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+      secure: process.env.SMTP_SECURE === 'true', // optional
+    },
+    // Alternatively, you could pass a custom transport:
+    // transport: nodemailer.createTransport({ ... })
+  }),
 })
