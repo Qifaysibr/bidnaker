@@ -80,6 +80,7 @@ const config = {
           DEFAULT: 'hsl(var(--popover))',
           foreground: 'hsl(var(--popover-foreground))',
         },
+        pks: '#fe5000',
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
@@ -151,3 +152,4 @@ const config = {
 }
 
 export default config
+

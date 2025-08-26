@@ -1,7 +1,8 @@
-import { formatDateTime } from 'src/utilities/formatDateTime'
+// import { formatDateTime } from 'src/utilities/formatDateTime'
 import React from 'react'
 
 import type { Post } from '@/payload-types'
+import { jsAgo } from 'js-ago'
 
 import { Media } from '@/components/Media'
 import { formatAuthors } from '@/utilities/formatAuthors'
@@ -13,6 +14,8 @@ export const PostHero: React.FC<{
 
   const hasAuthors =
     populatedAuthors && populatedAuthors.length > 0 && formatAuthors(populatedAuthors) !== ''
+
+  const publishedAtDate = publishedAt ? jsAgo(new Date(publishedAt), { locale: 'id-ID', style: 'long' }) : null;
 
   return (
     <div className="relative -mt-[10.4rem] flex items-end">
@@ -54,9 +57,9 @@ export const PostHero: React.FC<{
             )}
             {publishedAt && (
               <div className="flex flex-col gap-1">
-                <p className="text-sm">Date Published</p>
 
-                <time dateTime={publishedAt}>{formatDateTime(publishedAt)}</time>
+                <time dateTime={publishedAt}>{publishedAt && publishedAtDate}</time>
+                {/* <time dateTime={publishedAt}>{formatDateTime(publishedAt)}</time> */}
               </div>
             )}
           </div>
