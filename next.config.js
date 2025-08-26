@@ -1,16 +1,16 @@
 import { withPayload } from '@payloadcms/next/withPayload'
-
 import redirects from './redirects.js'
 
 const NEXT_PUBLIC_SERVER_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
   ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-  : undefined || process.env.__NEXT_PRIVATE_ORIGIN || 'http://localhost:3000'
+  : process.env.__NEXT_PRIVATE_ORIGIN || 'http://localhost:3000'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
     remotePatterns: [
-      ...[NEXT_PUBLIC_SERVER_URL /* 'https://example.com' */].map((item) => {
+      // izinkan domain Payload lokal/production
+      ...[NEXT_PUBLIC_SERVER_URL].map((item) => {
         const url = new URL(item)
 
         return {
@@ -18,6 +18,10 @@ const nextConfig = {
           protocol: url.protocol.replace(':', ''),
         }
       }),
+      {
+        protocol: 'https',
+        hostname: '**.blob.vercel-storage.com',
+      },
     ],
   },
   webpack: (webpackConfig) => {
@@ -34,3 +38,4 @@ const nextConfig = {
 }
 
 export default withPayload(nextConfig, { devBundleServerPackages: false })
+
