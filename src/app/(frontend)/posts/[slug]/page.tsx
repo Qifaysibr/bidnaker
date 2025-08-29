@@ -14,6 +14,7 @@ import { draftMode } from 'next/headers'
 import { getPayload } from 'payload'
 import React, { cache } from 'react'
 import PageClient from './page.client'
+import { ShareButton } from '@/components/ShareButton'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -55,6 +56,10 @@ export default async function Post({ params: paramsPromise }: Args) {
     <article className="pt-16 pb-16 bg-[url('/media/bg-pks.png')] dark:bg-[url('/media/bg-pks-dark.png')]">
       <PageClient />
 
+      <div className="md:hidden fixed bottom-8 right-8 z-50">
+        <ShareButton post={{ title: post.title, slug: post.slug ?? '' }} />
+      </div>
+
       {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
 
@@ -63,6 +68,10 @@ export default async function Post({ params: paramsPromise }: Args) {
       <div className="container">
         <div className="mx-auto max-w-[52rem] bg-white dark:bg-card p-4 rounded-xl shadow-2xl">
           <PostHero post={post} />
+
+          <div className="hidden md:flex justify-center my-4">
+            <ShareButton post={{ title: post.title, slug: post.slug ?? '' }} alwaysOpen />
+          </div>
 
           {heroImage && typeof heroImage !== 'string' && (
             <div className="my-8 rounded-xl overflow-hidden -mx-8">
