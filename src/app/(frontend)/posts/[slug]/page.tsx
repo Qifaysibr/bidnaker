@@ -1,19 +1,19 @@
 import type { Metadata } from 'next'
 
+import { cn } from '@/utilities/ui'
 import { RelatedPosts } from '@/blocks/RelatedPosts/Component'
-import { PayloadRedirects } from '@/components/PayloadRedirects'
-import configPromise from '@payload-config'
-import { getPayload } from 'payload'
-import { draftMode } from 'next/headers'
-import React, { cache } from 'react'
-import RichText from '@/components/RichText'
-
-import type { Post } from '@/payload-types'
-
-import { PostHero } from '@/heros/PostHero'
-import { generateMeta } from '@/utilities/generateMeta'
-import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
+import { Media } from '@/components/Media'
+import { PayloadRedirects } from '@/components/PayloadRedirects'
+import RichText from '@/components/RichText'
+import { PostHero } from '@/heros/PostHero'
+import type { Post } from '@/payload-types'
+import { generateMeta } from '@/utilities/generateMeta'
+import configPromise from '@payload-config'
+import { draftMode } from 'next/headers'
+import { getPayload } from 'payload'
+import React, { cache } from 'react'
+import PageClient from './page.client'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -49,8 +49,10 @@ export default async function Post({ params: paramsPromise }: Args) {
 
   if (!post) return <PayloadRedirects url={url} />
 
+  const { heroImage } = post
+
   return (
-    <article className="pt-16 pb-16">
+    <article className="pt-16 pb-16 bg-[url(https://pks.id/img/bg-pks.png)]">
       <PageClient />
 
       {/* Allows redirects for valid pages too */}
@@ -58,18 +60,29 @@ export default async function Post({ params: paramsPromise }: Args) {
 
       {draft && <LivePreviewListener />}
 
-      <PostHero post={post} />
+      <div className="container">
+        <div className="mx-auto max-w-[52rem] bg-white p-4 rounded-xl shadow-2xl">
+          <PostHero post={post} />
 
-      <div className="flex flex-col items-center gap-4 pt-8">
-        <div className="container">
-          <RichText className="max-w-[48rem] mx-auto" data={post.content} enableGutter={false} />
-          {post.relatedPosts && post.relatedPosts.length > 0 && (
-            <RelatedPosts
-              className="mt-12 max-w-[52rem] lg:grid lg:grid-cols-subgrid col-start-1 col-span-3 grid-rows-[2fr]"
-              docs={post.relatedPosts.filter((post) => typeof post === 'object')}
-            />
+          {heroImage && typeof heroImage !== 'string' && (
+            <div className="my-8 rounded-xl overflow-hidden -mx-8">
+              <div className="mx-auto max-w-[48rem]">
+                <Media
+                  resource={heroImage}
+                  className={cn('border border-border rounded-xl overflow-hidden')}
+                />
+              </div>
+            </div>
           )}
+          <RichText className="mx-auto max-w-[48rem]" data={post.content} enableGutter={false} />
         </div>
+
+        {post.relatedPosts && post.relatedPosts.length > 0 && (
+          <RelatedPosts
+            className="col-span-3 col-start-1 mt-12 grid-rows-[2fr] max-w-[52rem] lg:grid lg:grid-cols-subgrid"
+            docs={post.relatedPosts.filter(post => typeof post === 'object')}
+          />
+        )}
       </div>
     </article>
   )
@@ -82,7 +95,7 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   return generateMeta({ doc: post })
 }
 
-const queryPostBySlug = cache(async ({ slug }: { slug: string }) => {
+const queryPostBySlug = cache(async ({ slug }: { slug: string }): Promise<Post | null> => {
   const { isEnabled: draft } = await draftMode()
 
   const payload = await getPayload({ config: configPromise })

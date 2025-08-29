@@ -1,75 +1,91 @@
-// import { formatDateTime } from 'src/utilities/formatDateTime'
 import React from 'react'
 
 import type { Post } from '@/payload-types'
 import { jsAgo } from 'js-ago'
 
-import { Media } from '@/components/Media'
 import { formatAuthors } from '@/utilities/formatAuthors'
+import { formatDateTime } from '@/utilities/formatDateTime'
 
 export const PostHero: React.FC<{
   post: Post
 }> = ({ post }) => {
-  const { categories, heroImage, populatedAuthors, publishedAt, title } = post
+  const { categories, populatedAuthors, publishedAt, title } = post
 
   const hasAuthors =
     populatedAuthors && populatedAuthors.length > 0 && formatAuthors(populatedAuthors) !== ''
 
-  const publishedAtDate = publishedAt ? jsAgo(new Date(publishedAt), { locale: 'id-ID', style: 'long' }) : null;
+  // Hitung selisih hari
+  const publishedDate = publishedAt ? new Date(publishedAt) : null
+  const now = new Date()
+  const diffDays = publishedDate
+    ? Math.floor((now.getTime() - publishedDate.getTime()) / (1000 * 60 * 60 * 24))
+    : null
+
+  // Tentukan tampilan waktu
+  const displayTime =
+    publishedDate && diffDays !== null
+      ? diffDays < 7
+        ? jsAgo(publishedDate, { locale: 'id-ID', style: 'long' }) // < 7 hari → relative
+        : formatDateTime(publishedDate.toISOString()) // ≥ 7 hari → tanggal normal
+      : null
 
   return (
-    <div className="relative -mt-[10.4rem] flex items-end">
-      <div className="container z-10 relative lg:grid lg:grid-cols-[1fr_48rem_1fr] text-white pb-8">
-        <div className="col-start-1 col-span-1 md:col-start-2 md:col-span-2">
-          <div className="uppercase text-sm mb-6">
-            {categories?.map((category, index) => {
-              if (typeof category === 'object' && category !== null) {
-                const { title: categoryTitle } = category
+    <div className="container">
+      <div className="mx-auto max-w-[48rem]">
+        <div className="mb-6 text-sm uppercase text-gray-400">
+          {categories?.map((category, index) => {
+            if (typeof category === 'object' && category !== null) {
+              const { title: categoryTitle } = category
 
-                const titleToUse = categoryTitle || 'Untitled category'
+              const titleToUse = categoryTitle || 'Untitled category'
+              const isLast = index === categories.length - 1
 
-                const isLast = index === categories.length - 1
-
-                return (
-                  <React.Fragment key={index}>
-                    {titleToUse}
-                    {!isLast && <React.Fragment>, &nbsp;</React.Fragment>}
-                  </React.Fragment>
-                )
-              }
-              return null
-            })}
-          </div>
-
-          <div className="">
-            <h1 className="mb-6 text-3xl md:text-5xl lg:text-6xl">{title}</h1>
-          </div>
-
-          <div className="flex flex-col md:flex-row gap-4 md:gap-16">
-            {hasAuthors && (
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-1">
-                  <p className="text-sm">Author</p>
-
-                  <p>{formatAuthors(populatedAuthors)}</p>
-                </div>
-              </div>
-            )}
-            {publishedAt && (
-              <div className="flex flex-col gap-1">
-
-                <time dateTime={publishedAt}>{publishedAt && publishedAtDate}</time>
-                {/* <time dateTime={publishedAt}>{formatDateTime(publishedAt)}</time> */}
-              </div>
-            )}
-          </div>
+              return (
+                <React.Fragment key={index}>
+                  {titleToUse}
+                  {!isLast && <React.Fragment>, &nbsp;</React.Fragment>}
+                </React.Fragment>
+              )
+            }
+            return null
+          })}
         </div>
-      </div>
-      <div className="min-h-[80vh] select-none">
-        {heroImage && typeof heroImage !== 'string' && (
-          <Media fill priority imgClassName="-z-10 object-cover" resource={heroImage} />
-        )}
-        <div className="absolute pointer-events-none left-0 bottom-0 w-full h-1/2 bg-gradient-to-t from-black to-transparent" />
+
+        <div className="">
+          <h1 className="mb-6 text-3xl md:text-5xl lg:text-6xl">{title}</h1>
+        </div>
+
+        <div className="flex flex-col gap-4 md:flex-row md:gap-16">
+          {hasAuthors && (
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1 text-gray-500">
+                <p className="text-sm">Author</p>
+                <p>{formatAuthors(populatedAuthors)}</p>
+              </div>
+            </div>
+          )}
+          {publishedAt && (
+            <div className="flex flex-col gap-1 ">
+              <time className="flex items-center gap-1 text-gray-500" dateTime={publishedAt}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 text-[#fe5000]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                {displayTime}
+              </time>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
