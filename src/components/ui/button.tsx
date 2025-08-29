@@ -22,7 +22,7 @@ const buttonVariants = cva(
         default: 'bg-pks text-primary-foreground hover:bg-pks/50',
         destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
         ghost: 'hover:bg-card hover:text-accent-foreground',
-        link: 'text-primary items-start justify-start underline-offset-4 hover:underline',
+        link: 'text-primary items-start justify-start underline-offset-4 hover:underline decoration-pks',
         outline: 'border border-border bg-background hover:bg-card hover:text-accent-foreground',
         secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
       },

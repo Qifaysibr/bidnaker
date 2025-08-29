@@ -52,7 +52,7 @@ export default async function Post({ params: paramsPromise }: Args) {
   const { heroImage } = post
 
   return (
-    <article className="pt-16 pb-16 bg-[url(https://pks.id/img/bg-pks.png)]">
+    <article className="pt-16 pb-16 bg-[url('/media/bg-pks.png')] dark:bg-[url('/media/bg-pks-dark.png')]">
       <PageClient />
 
       {/* Allows redirects for valid pages too */}
@@ -61,7 +61,7 @@ export default async function Post({ params: paramsPromise }: Args) {
       {draft && <LivePreviewListener />}
 
       <div className="container">
-        <div className="mx-auto max-w-[52rem] bg-white p-4 rounded-xl shadow-2xl">
+        <div className="mx-auto max-w-[52rem] bg-white dark:bg-card p-4 rounded-xl shadow-2xl">
           <PostHero post={post} />
 
           {heroImage && typeof heroImage !== 'string' && (

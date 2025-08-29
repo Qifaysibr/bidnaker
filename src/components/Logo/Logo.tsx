@@ -17,13 +17,13 @@ export const Logo = (props: Props) => {
     /* eslint-disable @next/next/no-img-element */
     <img
       alt="PKS Logo"
-      width={193}
-      height={34}
+      width={100}
+      height={100}
       loading={loading}
       fetchPriority={priority}
       decoding="async"
-      className={clsx('max-w-[9.375rem] w-full h-[34px]', className)}
-      src="https://pks.id/img/logo-pks.png"
+      className={clsx('max-w-[100px] w-10 md:w-16 lg:w-20 h-auto', className)}
+      src="/media/logo-pks.png"
     />
   )
 }
