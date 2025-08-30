@@ -99,14 +99,14 @@ export const ShareButton: React.FC<ShareButtonProps> = ({ post, className, alway
       </button>
 
       {isOpen && (
-        <div className="absolute bottom-20 right-0 flex flex-col gap-2 bg-white p-2 rounded-lg shadow-lg dark:bg-gray-800">
+        <div className="absolute bottom-20 right-0 flex flex-col gap-2 p-2 rounded-lg shadow-2xl dark:bg-gray-800">
           {shareOptions.map(option => (
             <a
               key={option.name}
               href={option.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+              className="flex items-center gap-2 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 border border-pks bg-slate-100"
             >
               {option.icon}
               <span className="text-sm">{option.name}</span>
