@@ -16,25 +16,25 @@ import React, { cache } from 'react'
 import PageClient from './page.client'
 import { ShareButton } from '@/components/ShareButton'
 
-export async function generateStaticParams() {
-  const payload = await getPayload({ config: configPromise })
-  const posts = await payload.find({
-    collection: 'posts',
-    draft: false,
-    limit: 1000,
-    overrideAccess: false,
-    pagination: false,
-    select: {
-      slug: true,
-    },
-  })
+// export async function generateStaticParams() {
+//   const payload = await getPayload({ config: configPromise })
+//   const posts = await payload.find({
+//     collection: 'posts',
+//     draft: false,
+//     limit: 1000,
+//     overrideAccess: false,
+//     pagination: false,
+//     select: {
+//       slug: true,
+//     },
+//   })
 
-  const params = posts.docs.map(({ slug }) => {
-    return { slug }
-  })
+//   const params = posts.docs.map(({ slug }) => {
+//     return { slug }
+//   })
 
-  return params
-}
+//   return params
+// }
 
 type Args = {
   params: Promise<{
@@ -89,7 +89,7 @@ export default async function Post({ params: paramsPromise }: Args) {
         {post.relatedPosts && post.relatedPosts.length > 0 && (
           <RelatedPosts
             className="col-span-3 col-start-1 mt-12 grid-rows-[2fr] max-w-[52rem] lg:grid lg:grid-cols-subgrid"
-            docs={post.relatedPosts.filter(post => typeof post === 'object')}
+            docs={post.relatedPosts.filter((post) => typeof post === 'object')}
           />
         )}
       </div>
